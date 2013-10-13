@@ -232,17 +232,17 @@ article h3 a:hover {
 
 article p {
   font-family: Georgia,Cambria,"Times New Roman",Times,serif;
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.4em;
   color: #444;
 }
 
-article time.date:before{content:"\f073  ";font-family:'FontAwesome';}
-article time.date { display: inline-block; margin-bottom: 10px; font-weight: bold;}
-article time { display: inline-block; margin-bottom: 10px; margin-left: 5px; font-weight: bold;}
+time.date:before{content:"\f073  ";font-family:'FontAwesome';}
+time.date { display: inline-block; margin-bottom: 10px; font-weight: bold; color: #AEAEAE; }
+time { display: inline-block; margin-bottom: 10px; margin-left: 5px; font-weight: bold; color: #AEAEAE; }
 
 @media (max-width: 767px) {  
-  article time.date { display: inline-block; margin-bottom: 10px; font-size: 14px; }
+  time.date { display: inline-block; margin-bottom: 10px; font-size: 14px; }
   
   .sidebar {
 	margin-top:0px;
@@ -284,14 +284,27 @@ span.tags:before {
 }
 
 span.tags {
+	color: #AEAEAE;
 	margin-left: 10px;
-    display: inline;
+  display: inline;
 }
 
 span.tags a {
-	color: #AEAEAE;
-    font-style: italic;
+	color: #AFAFAF;
+  font-style: italic;
+}
+
+div.info {
+  margin-bottom: 10px;
+  display: inline-block;
 }
 
 
 /* Text Styles */
+
+.mainbody .post {
+  font-family: Georgia,Cambria,"Times New Roman",Times,serif;
+  font-size: 20px;
+  line-height: 1.4em;
+  color: #444;
+}
