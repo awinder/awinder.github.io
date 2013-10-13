@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://awinder.github.io/sitemap.xml 
