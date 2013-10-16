@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[The Attic]]></title>
-  <link href="http://awinder.github.io/atom.xml" rel="self"/>
+  <title><![CDATA[Category: modules | The Attic]]></title>
+  <link href="http://awinder.github.io/blog/categories/modules/atom.xml" rel="self"/>
   <link href="http://awinder.github.io/"/>
   <updated>2013-10-15T22:34:54-04:00</updated>
   <id>http://awinder.github.io/</id>
@@ -20,23 +20,21 @@
     <id>http://awinder.github.io/blog/2013/10/15/structuring-local-node-modules</id>
     <content type="html"><![CDATA[<p>Recently I needed to start thinking about adding reusable &ldquo;library&rdquo; components to an <a href="http://www.expressjs.com">Express.js</a> node.js project, and I hit a bit of a brick wall.  The library functionality was fairly specific to the application, and it just doesn&rsquo;t make that much sense to break it out as seperately-packaged module right now.  Seems like a fairly common use-case, right?  Well, apparently not.  You can load any filepath through the <code>require()</code> system, like so:</p>
 
-<figure class='code'><figcaption><span>app.js </span></figcaption>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>app.js </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">module</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./lib/myModule&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="p">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">module</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;.</span><span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">myModule</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;);</span>
+</span><span class='line'><span class="o">&amp;</span><span class="nx">hellip</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>But where this can quickly become a nuisance is when you are nested down a deep folder hierarchy:</p>
 
-<figure class='code'><figcaption><span>resources/items/models/itemModel.js </span></figcaption>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>resources/items/models/itemModel.js </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">module</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../../../lib/myModule&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="p">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">module</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;..</span><span class="o">/</span><span class="p">..</span><span class="o">/</span><span class="p">..</span><span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">myModule</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;);</span>
+</span><span class='line'><span class="o">&amp;</span><span class="nx">hellip</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Having to track the folder hierarchy is a little bit of an inconvience, especially when compared to the convience of the <a href="https://npmjs.org">NPM</a> module system.  Searching around for some solutions, I found issues with the approaches commonly suggested:</p>
 
@@ -50,32 +48,16 @@
 
 <p>Npm-link got me thinking though, and a <a href="http://mathematism.com">co-worker</a> clued in on that too.  We could create a &ldquo;library&rdquo; module, which acted mostly as a namespace for our project&rsquo;s unique library-type functionality.  Each of those unique pieces would be submodules of the &ldquo;library&rdquo; module.  Then, we can create a symlink from the node_modules directory to the library directory, and commit that symlink into our source control.  Now our code can look like this:</p>
 
-<figure class='code'><figcaption><span>resources/items/models/itemModel.js </span></figcaption>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>resources/items/models/itemModel.js </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">module</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;lib/myModule&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="p">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">module</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">lib</span><span class="o">/</span><span class="nx">myModule</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;);</span>
+</span><span class='line'><span class="o">&amp;</span><span class="nx">hellip</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>We get the benefits of keeping our code outside of the node_modules directory, but with the benefits of it living within the <code>require()</code> lookup path.  It&rsquo;s working out great so far, and I&rsquo;m happy we ended up finding a very straightforward solution to our problem.</p>
 
-<p><img src="http://awinder.github.io/images/posts/2013-10-15-structuring-local-node-modules/folder-structure.png" alt="Example folder structure" /></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[What's In the Attic]]></title>
-    <link href="http://awinder.github.io/blog/2013/10/13/whats-in-the-attic/"/>
-    <updated>2013-10-13T16:34:00-04:00</updated>
-    <id>http://awinder.github.io/blog/2013/10/13/whats-in-the-attic</id>
-    <content type="html"><![CDATA[<p>Hello World!  Welcome to the Attic, that musty place containing the out-of-season or otherwise discarded riff-raff of your life.  Or in this case, the random musings and technical discussions of Andrew Winder, a web engineer at Message Systems in Columbia, MD.  I&rsquo;m primarily focused on the areas of PHP API development and well-structured <a href="http://www.angularjs.org">Javascript</a> on the client-side right now, along with <a href="https://en.wikipedia.org/wiki/NoSQL">non-rdbms</a> data storage design and <a href="http://www.nodejs.org">server-side javascript</a> slowly commanding more and more of my attention.  As I continue to explore these areas of technology, I&rsquo;ve found myself wanting somewhere to collect and gather my thoughts, and record my experiences designing and building solutions using these tools.  This blog will serve as that somewhere, that place to gather and store my thoughts, so that one day someone might find some use for them.  My attic.</p>
-
-<p>Along with acting as a place to purely write though, this blog will also act as an experimental playground for front-end development as well.  I&rsquo;m utilizing <a href="http://jekyllrb.com">Jekyll</a> as a static-site generator of these posts and listing pages, <a href="http://twitter.github.io/bootstrap/">Twitter Bootstrap</a> as a CSS framework, and <a href="http://fortawesome.github.io/Font-Awesome/">FontAwesome</a> to provide iconography across the site.  I&rsquo;ll be sure not to break things as I go along, but I&rsquo;ve taken a first stab at a responsive design that seems to make sense to me across various device breakpoints.  That may not be the last stab, though.  This site will also evolve as I continue to actually write out posts.  Right now, with one post, RSS feeds don&rsquo;t make much sense, but if I can get into a good rhythm of posting updates, that&rsquo;ll be next up.  Figuring out better tag paging support might come after that.</p>
-
-<p>That about wraps up my introduction to this site.  Please feel free to ping me over the social media links on this site with any feedback, suggestions, or requests you might have!</p>
-
-<p>-Andy, <a href="http://www.twitter.com/awinder">@awinder</a></p>
+<p><img src="/images/posts/2013-10-15-structuring-local-node-modules/folder-structure.png" alt="Example folder structure" /></p>
 ]]></content>
   </entry>
   

@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>The Attic</title>
+  <title>Structuring Library Functionality in Node.js Projects - The Attic</title>
   <meta name="author" content="Andrew Winder">
 
   
-  <meta name="description" content="Structuring Library Functionality in Node.js Projects October 15, 2013@ 10:05 PM EDT Recently I needed to start thinking about adding reusable & &hellip;">
+  <meta name="description" content="Structuring Library Functionality in Node.js Projects October 15, 2013 @ 10:05 PM EDT express.js, modules, node.js, npm Recently I needed to start &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://awinder.github.io">
+  <link rel="canonical" href="http://awinder.github.io/blog/2013/10/15/structuring-local-node-modules">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/bootstrap.min.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -88,17 +88,18 @@
 
       </div>
       <div class="span9">
-        <div class="blog-index">
-  
-  
-  
-    <article>
-      
-
-  <h3><a href="/blog/2013/10/15/structuring-local-node-modules/">Structuring Library Functionality in Node.js Projects</a></h3>
-  <time class="date">October 15, 2013</time><time class="hidden-phone">@ 10:05 PM EDT</time>
-  <div class="content">
-    <p>Recently I needed to start thinking about adding reusable &ldquo;library&rdquo; components to an <a href="http://www.expressjs.com">Express.js</a> node.js project, and I hit a bit of a brick wall.  The library functionality was fairly specific to the application, and it just doesn&rsquo;t make that much sense to break it out as seperately-packaged module right now.  Seems like a fairly common use-case, right?  Well, apparently not.  You can load any filepath through the <code>require()</code> system, like so:</p>
+        <h1>Structuring Library Functionality in Node.js Projects</h1>
+<div class="info">
+  <time class="date">October 15, 2013</time>
+  <time class="hidden-phone"> @ 10:05 PM EDT</time>
+  <span class="tags">
+    
+      <a class='category' href='/blog/categories/express-dot-js/'>express.js</a>, <a class='category' href='/blog/categories/modules/'>modules</a>, <a class='category' href='/blog/categories/node-dot-js/'>node.js</a>, <a class='category' href='/blog/categories/npm/'>npm</a>
+    
+  </span>
+</div>
+<article role="article">
+<p>Recently I needed to start thinking about adding reusable &ldquo;library&rdquo; components to an <a href="http://www.expressjs.com">Express.js</a> node.js project, and I hit a bit of a brick wall.  The library functionality was fairly specific to the application, and it just doesn&rsquo;t make that much sense to break it out as seperately-packaged module right now.  Seems like a fairly common use-case, right?  Well, apparently not.  You can load any filepath through the <code>require()</code> system, like so:</p>
 
 <figure class='code'><figcaption><span>app.js </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -142,46 +143,7 @@
 
 <p><img src="/images/posts/2013-10-15-structuring-local-node-modules/folder-structure.png" alt="Example folder structure" /></p>
 
-  </div>
-
-
-    </article>
-  
-  
-    <article>
-      
-
-  <h3><a href="/blog/2013/10/13/whats-in-the-attic/">What&#8217;s In the Attic</a></h3>
-  <time class="date">October 13, 2013</time><time class="hidden-phone">@ 04:34 PM EDT</time>
-  <div class="content">
-    <p>Hello World!  Welcome to the Attic, that musty place containing the out-of-season or otherwise discarded riff-raff of your life.  Or in this case, the random musings and technical discussions of Andrew Winder, a web engineer at Message Systems in Columbia, MD.  I&rsquo;m primarily focused on the areas of PHP API development and well-structured <a href="http://www.angularjs.org">Javascript</a> on the client-side right now, along with <a href="https://en.wikipedia.org/wiki/NoSQL">non-rdbms</a> data storage design and <a href="http://www.nodejs.org">server-side javascript</a> slowly commanding more and more of my attention.  As I continue to explore these areas of technology, I&rsquo;ve found myself wanting somewhere to collect and gather my thoughts, and record my experiences designing and building solutions using these tools.  This blog will serve as that somewhere, that place to gather and store my thoughts, so that one day someone might find some use for them.  My attic.</p>
-
-<p>Along with acting as a place to purely write though, this blog will also act as an experimental playground for front-end development as well.  I&rsquo;m utilizing <a href="http://jekyllrb.com">Jekyll</a> as a static-site generator of these posts and listing pages, <a href="http://twitter.github.io/bootstrap/">Twitter Bootstrap</a> as a CSS framework, and <a href="http://fortawesome.github.io/Font-Awesome/">FontAwesome</a> to provide iconography across the site.  I&rsquo;ll be sure not to break things as I go along, but I&rsquo;ve taken a first stab at a responsive design that seems to make sense to me across various device breakpoints.  That may not be the last stab, though.  This site will also evolve as I continue to actually write out posts.  Right now, with one post, RSS feeds don&rsquo;t make much sense, but if I can get into a good rhythm of posting updates, that&rsquo;ll be next up.  Figuring out better tag paging support might come after that.</p>
-
-<p>That about wraps up my introduction to this site.  Please feel free to ping me over the social media links on this site with any feedback, suggestions, or requests you might have!</p>
-
-<p>-Andy, <a href="http://www.twitter.com/awinder">@awinder</a></p>
-
-  </div>
-
-
-    </article>
-  
-</div>
-<div class="span12">
-  <ul class="pager">    
-    
-      
-    
-    
-      
-    
-    <li class="disabled"><a href="">&larr; Older</a></li>
-    <li><a href="/blog/archives">Blog Archives</a></li>
-    <li class="disabled"><a href="">Newer &rarr;</a></li>
-  </ul>
-</div>
-        
+</article>        
       </div>
     </div>
     <footer>

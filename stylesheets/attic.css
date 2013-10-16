@@ -8,9 +8,6 @@ div.row.header {
   padding-left: 0px;
   height: 90px;
   overflow: hidden;
-  -webkit-box-shadow: 5px 10px 24px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 5px 10px 24px 0px rgba(0,0,0,0.75);
-  box-shadow: 5px 10px 24px 0px rgba(0,0,0,0.75);
   background: rgba(2, 94, 82, 0.882353);
 }
 
@@ -302,9 +299,37 @@ div.info {
 
 /* Text Styles */
 
-.mainbody .post {
+.mainbody article {
   font-family: Georgia,Cambria,"Times New Roman",Times,serif;
   font-size: 20px;
   line-height: 1.4em;
   color: #444;
+}
+
+.blog-index article {
+  margin-bottom: 30px;
+}
+
+.mainbody article ul li {
+  margin-bottom: 10px;
+  line-height: 1.4em;
+}
+
+.mainbody article img {
+  -webkit-border-radius: 0.3em;
+  -moz-border-radius: 0.3em;
+  -ms-border-radius: 0.3em;
+  -o-border-radius: 0.3em;
+  border-radius: 0.3em;
+  -webkit-box-shadow: rgba(0,0,0,0.15) 0 1px 4px;
+  -moz-box-shadow: rgba(0,0,0,0.15) 0 1px 4px;
+  box-shadow: rgba(0,0,0,0.15) 0 1px 4px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: #fff 0.5em solid;
+}
+
+body>div.container-fluid {
+  border-bottom: 0px;
 }
