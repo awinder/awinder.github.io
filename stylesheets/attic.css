@@ -213,12 +213,17 @@ footer p {
 
 article h3 {
   font-family: Georgia,serif;
-  font-size: 2.5em;
+  font-size: 2em;
   color: #4B3621;
+  color: rgba(41,127,116,0.9);
+  font-style: italic;
+  line-height: 1.0em;
 }
 
-article h3 a {
+article h3 a, article h3 a:visited {
   color: rgba(41,127,116,0.9);
+  font-style: italic;
+  line-height: 1.0em;
 }
 
 article h3 a:hover {

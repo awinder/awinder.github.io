@@ -88,18 +88,18 @@
 
       </div>
       <div class="span9">
-        <h1>Structuring Library Functionality in Node.js Projects</h1>
-<div class="info">
-  <time class="date">October 15, 2013</time>
-  <time class="hidden-phone"> @ 10:05 PM EDT</time>
-  <span class="tags">
-    
-      <a class='category' href='/blog/categories/express-dot-js/'>express.js</a>, <a class='category' href='/blog/categories/modules/'>modules</a>, <a class='category' href='/blog/categories/node-dot-js/'>node.js</a>, <a class='category' href='/blog/categories/npm/'>npm</a>
-    
-  </span>
-</div>
-<article role="article">
-<p>Recently I needed to start thinking about adding reusable &ldquo;library&rdquo; components to an <a href="http://www.expressjs.com">Express.js</a> node.js project, and I hit a bit of a brick wall.  The library functionality was fairly specific to the application, and it just doesn&rsquo;t make that much sense to break it out as seperately-packaged module right now.  Seems like a fairly common use-case, right?  Well, apparently not.  You can load any filepath through the <code>require()</code> system, like so:</p>
+        <article role="article">
+  <h3>Structuring Library Functionality in Node.js Projects</h3>
+  <div class="info">
+    <time class="date">October 15, 2013</time>
+    <time class="hidden-phone"> @ 10:05 PM EDT</time>
+    <span class="tags">
+      
+        <a class='category' href='/blog/categories/express-dot-js/'>express.js</a>, <a class='category' href='/blog/categories/modules/'>modules</a>, <a class='category' href='/blog/categories/node-dot-js/'>node.js</a>, <a class='category' href='/blog/categories/npm/'>npm</a>
+      
+    </span>
+  </div>
+  <p>Recently I needed to start thinking about adding reusable &ldquo;library&rdquo; components to an <a href="http://www.expressjs.com">Express.js</a> node.js project, and I hit a bit of a brick wall.  The library functionality was fairly specific to the application, and it just doesn&rsquo;t make that much sense to break it out as seperately-packaged module right now.  Seems like a fairly common use-case, right?  Well, apparently not.  You can load any filepath through the <code>require()</code> system, like so:</p>
 
 <figure class='code'><figcaption><span>app.js </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
