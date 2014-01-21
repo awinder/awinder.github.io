@@ -338,3 +338,18 @@ div.info {
 body>div.container-fluid {
   border-bottom: 0px;
 }
+
+/* fixes */
+html .gist .gist-file table.highlight {
+  width: 100%;
+}
+
+.code-title, html .gist .gist-file .gist-meta a[href*='#file'], h3.filename, figure.code figcaption {
+  width: 100%;
+  border: none;
+}
+
+html .gist .gist-file .gist-meta {
+  background-color: #cbcccc;
+  border: 1px solid #cbcccc !important;
+}
