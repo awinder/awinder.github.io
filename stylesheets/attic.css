@@ -344,6 +344,10 @@ html .gist .gist-file table.highlight {
   width: 100%;
 }
 
+html .gist .gist-file .gist-data .line-numbers {
+  font-size: 20px;
+}
+
 .code-title, html .gist .gist-file .gist-meta a[href*='#file'], h3.filename, figure.code figcaption {
   width: 100%;
   border: none;
