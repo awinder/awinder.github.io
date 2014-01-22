@@ -4,7 +4,7 @@
   <title><![CDATA[Category: npm | The Attic]]></title>
   <link href="http://awinder.github.io/blog/categories/npm/atom.xml" rel="self"/>
   <link href="http://awinder.github.io/"/>
-  <updated>2014-01-21T20:43:31-05:00</updated>
+  <updated>2014-01-21T20:48:15-05:00</updated>
   <id>http://awinder.github.io/</id>
   <author>
     <name><![CDATA[Andrew Winder]]></name>
@@ -20,21 +20,18 @@
     <id>http://awinder.github.io/blog/2013/10/15/structuring-local-node-modules</id>
     <content type="html"><![CDATA[<p>Recently I needed to start thinking about adding reusable &ldquo;library&rdquo; components to an <a href="http://www.expressjs.com">Express.js</a> node.js project, and I hit a bit of a brick wall.  The library functionality was fairly specific to the application, and it just doesn&rsquo;t make that much sense to break it out as seperately-packaged module right now.  Seems like a fairly common use-case, right?  Well, apparently not.  You can load any filepath through the <code>require()</code> system, like so:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>app.js </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">module</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;.</span><span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">myModule</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;);</span>
-</span><span class='line'><span class="o">&amp;</span><span class="nx">hellip</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p><div><script src='https://gist.github.com/8552134.js?file=app.js'></script>
+<noscript><pre><code>var module = require('./lib/myModule');
+...</code></pre></noscript></div>
+</p>
 
 <p>But where this can quickly become a nuisance is when you are nested down a deep folder hierarchy:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>resources/items/models/itemModel.js </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">module</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;..</span><span class="o">/</span><span class="p">..</span><span class="o">/</span><span class="p">..</span><span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">myModule</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;);</span>
-</span><span class='line'><span class="o">&amp;</span><span class="nx">hellip</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p><div><script src='https://gist.github.com/8552134.js?file=itemModel.js'></script>
+<noscript><pre><code>var module = require('../../../lib/myModule');
+...
+</code></pre></noscript></div>
+</p>
 
 <p>Having to track the folder hierarchy is a little bit of an inconvience, especially when compared to the convience of the <a href="https://npmjs.org">NPM</a> module system.  Searching around for some solutions, I found issues with the approaches commonly suggested:</p>
 
@@ -48,12 +45,11 @@
 
 <p>Npm-link got me thinking though, and a <a href="http://mathematism.com">co-worker</a> clued in on that too.  We could create a &ldquo;library&rdquo; module, which acted mostly as a namespace for our project&rsquo;s unique library-type functionality.  Each of those unique pieces would be submodules of the &ldquo;library&rdquo; module.  Then, we can create a symlink from the node_modules directory to the library directory, and commit that symlink into our source control.  Now our code can look like this:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>resources/items/models/itemModel.js </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">module</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lsquo</span><span class="p">;</span><span class="nx">lib</span><span class="o">/</span><span class="nx">myModule</span><span class="o">&amp;</span><span class="nx">rsquo</span><span class="p">;);</span>
-</span><span class='line'><span class="o">&amp;</span><span class="nx">hellip</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p><div><script src='https://gist.github.com/8552134.js?file=newItemModel.js'></script>
+<noscript><pre><code>var module = require('lib/myModule');
+...
+</code></pre></noscript></div>
+</p>
 
 <p>We get the benefits of keeping our code outside of the node_modules directory, but with the benefits of it living within the <code>require()</code> lookup path.  It&rsquo;s working out great so far, and I&rsquo;m happy we ended up finding a very straightforward solution to our problem.</p>
 
