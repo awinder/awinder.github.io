@@ -1,0 +1,12 @@
+---
+layout: page
+title: "The Attic"
+date: 2014-03-25T20:52:19-04:00
+---
+{% for post in site.posts limit:10 %}
+  {% if post.layout == 'post' %}
+    {% include list_post.html %}
+  {% elsif post.layout == 'discussion' %}
+    {% include list_discussion.html %}
+  {% endif %}
+{% endfor %}

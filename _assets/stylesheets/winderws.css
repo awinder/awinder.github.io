@@ -1,0 +1,368 @@
+/*
+*= require bootstrap.min.css
+*= require bootstrap-theme.min.css
+*= require font-awesome.min.css
+*= require prism.css
+*/
+@font-face {
+  font-family: Bebas;
+  src: url('../fonts/BebasNeueLight.otf');
+}
+
+#header {
+  padding: 0px;
+  background-color: rgba(51, 77, 92, 0.8);
+  border-bottom: 10px solid rgba(223, 90, 73, 0.9);
+}
+
+body #header h1 a, body #header h1 a:visited, #sigline {
+  color: rgba(220, 243, 254, 1.0);
+  font-family: Bebas;
+}
+
+body #header h1 a:hover {
+  -webkit-transition: all 0.5s;
+  color: rgba(239, 201, 76, 1.0);
+}
+
+#header h1 {
+  font-size: 8rem;
+}
+
+#header a, #header a:visited {
+  -webkit-transition: all 0.5s;
+  color: rgba(239, 201, 76, 1.0);
+}
+
+#header a:hover {
+  color: rgba(220, 243, 254, 1.0);
+  text-decoration: none;
+  -webkit-transition: all 0.5s;
+}
+
+#sigline {
+  font-size: 2.5em;
+}
+
+#sigline {
+  margin-top: -20px;
+}
+
+#sigline.mini {
+  margin-top: -15px;
+}
+
+a, a:visited {
+  color: rgba(226, 122, 63, 0.9);
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgba(239, 201, 76, 1.0);
+}
+
+#toplinks, #toplinks li {
+  font-family: Bebas;
+  display: inline-block;
+  list-style: none;
+  margin-top: -21px;
+  padding-left: 0px;
+}
+
+#toplinks li {
+  padding-right: 1.0rem;
+}
+
+#toplinks li a {
+  display: inline-block;
+  list-style: none;
+  font-size: 5rem;
+}
+
+.navbar-toggle {
+  margin-top: -38px;
+}
+
+.navbar-toggle i {
+  font-size: 5rem;
+  color: rgba(239, 201, 76, 1.0);
+}
+
+#mobilelinks.nav {
+  font-family: Bebas;
+  border: none;
+  box-shadow: none;
+  margin-bottom: 10px;
+}
+
+#mobilelinks.nav>li>a:hover, #mobilelinks.nav>li>a:focus {
+  background-color: rgba(223, 90, 73, 0.7);
+}
+
+#mobilelinks.nav a {
+  color: rgba(239, 201, 76, 1.0);
+  font-size: 3rem;
+}
+
+@media (min-width: 768px) {
+  body #mobilelinks.nav {
+    display: none!important;
+  }
+}
+
+body .hide {
+  display: none !important;
+}
+
+#biography {
+  padding: 5px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+#biography p {
+  margin-top: 20px;
+  font-style: italic;
+  color: rgba(72, 108, 127, 1.0);
+}
+
+#me {
+  margin-top: 10px;
+  background-image: url('../img/face.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: 50% -27%;
+  width: 240px;
+  height: 240px;
+  border-radius: 480px;
+  -webkit-border-radius: 480px;
+  -moz-border-radius: 480px;
+  border: 5px solid rgba(223, 90, 73, 0.7);
+}
+
+#biography .row a {
+  font-size: 6rem;
+  color: rgba(51, 77, 92, 1.0);
+  -webkit-transition: all 0.5s;
+}
+
+#biography .row a:hover {
+  color: rgba(223, 90, 73, 0.9);
+  text-decoration: none;
+  -webkit-transition: all 0.5s;
+}
+
+#biography p {
+  font-family: Georgia;
+  font-size: 2rem;
+}
+
+@media (min-width: 992px) {
+  #me {
+    width: 200px;
+    height: 200px;
+    border-radius: 400px;
+    -webkit-border-radius: 400px;
+    -moz-border-radius: 400px;
+  }
+
+  #biography .row a {
+    font-size: 4rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  #me {
+    width: 240px;
+    height: 240px;
+    border-radius: 480px;
+    -webkit-border-radius: 480px;
+    -moz-border-radius: 480px;
+  }
+
+  #biography .row .fa {
+    font-size: 6rem;
+  }
+}
+
+article h2, article h2, article h2, article h2 a:hover, article h2 a:visited {
+  font-family: Georgia;
+  font-size: 4rem;
+  text-decoration: none;
+  color: rgba(226, 122, 63, 0.9);
+}
+
+article h2 a:hover {
+  color: rgba(239, 201, 76, 0.9);
+}
+
+article p {
+  font-family: Georgia;
+  font-size: 2rem;
+}
+
+article .meta date {
+  font-family: Georgia;
+  font-size: 1.6rem;
+  padding-right: 10px;
+  font-style: italic;
+}
+
+article .meta ul.tags {
+  list-style: none;
+  display: inline-block;
+  padding-left: 0px;
+  margin-bottom: 0px;
+}
+
+article .meta ul.tags li {
+  display: inline-block;
+  font-size: 1.6rem;
+  padding-right: 5px;
+  font-family: Georgia;
+}
+
+article .meta ul.tags li a,
+article .meta ul.tags li a:hover,
+article .meta ul.tags li a:visited {
+  color: rgba(51, 77, 92, 1.0);
+  text-decoration: none;
+}
+
+article .meta ul.tags li a:hover,
+article .meta ul.tags li a:hover:before {
+  color: rgba(223, 90, 73, 0.9);
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+}
+
+article .meta ul.tags li a:before {
+  font-family: FontAwesome;
+  content: '\f02b';
+  padding-right: 5px;
+  color: rgba(51, 77, 92, 1.0);
+}
+
+article.discussion {
+  margin-right: 20px;
+}
+
+article.discussion h3 a {
+  font-family: Georgia;
+  font-style: italic;
+  font-size: 3rem;
+}
+
+article.discussion h3 a:hover {
+  text-decoration: none;
+  font-style: italic;
+}
+
+article.discussion h3 a:before {
+  font-family: FontAwesome;
+  content: "\f08e  ";
+  position: relative;
+  top: 4px;
+  font-style: normal;
+}
+
+article.discussion .meta date {
+  font-size: 1.5rem;
+}
+article.discussion .meta li a {
+  font-size: 1.5rem;
+}
+article.discussion a.permalink,
+article.discussion a.permalink:visited {
+  color: rgba(51, 77, 92, 1.0);
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1.4rem;
+  font-family: Georgia;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+}
+
+article.discussion a.permalink:hover {
+  color: rgba(223, 90, 73, 0.9);
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+}
+
+article.discussion a.permalink:before {
+  font-family: FontAwesome;
+  content: "\f0c1  ";
+}
+
+/* Post styling */
+body.post article ul {
+  list-style: none;
+  padding-left: 20px
+}
+
+body.post article ul li {
+  padding-left: 0px;
+  font-family: Georgia;
+  font-size: 1.8rem;
+}
+
+body.post article ul li:before {
+  content: "\f101";
+  padding-right: 5px;
+  font-family: FontAwesome;
+}
+
+body.post article img {
+  width: 100%;
+}
+
+body.post article pre {
+  width: 100%;
+}
+
+body.post article pre code {
+  font-size: 14px;
+  min-width: 600px;
+}
+
+body.post article pre {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+body.post pre[class*="language-"]:before, pre[class*="language-"]:after {
+  content: none;
+}
+
+body.post pre[class*="language-"] {
+  background: none;
+}
+
+body.tag article p,
+body.linked_list article p {
+  display: none;
+}
+
+body.tag article h2,
+body.tag article h2 a:hover,
+body.tag article h2 a:visited,
+body.tag article.discussion h3 a,
+body.tag article.discussion h3 a:hover,
+body.tag article.discussion h3 a:visited {
+  font-size: 3rem;
+  font-style: normal;
+}
+
+div.footer {
+  margin-top: 30px;
+  margin-bottom: 0px;
+  padding: 20px 0 0px 0;
+  background-color: rgba(223, 90, 73, 1.0);
+  border-top: 10px solid rgba(51, 77, 92, 0.6);
+}
+
+footer p {
+  font-family: Georgia;
+  font-size: 2.5rem;
+  color: rgba(220, 243, 254, 1.0);
+}

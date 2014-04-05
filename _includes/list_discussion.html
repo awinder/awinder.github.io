@@ -1,0 +1,13 @@
+<article class="discussion">
+  <h3><a href="{{post.post_url}}">{{ post.title }}</a></h3>
+  <p>{{ post.content }}</p>
+  <div class="meta">
+    <date>Posted on {{ post.date | date: "%B %d, %Y" }}</date>
+    <ul class="tags">
+      {% for item in post.tags %}
+      <li><a href="/tags/{{item}}.html">{{item}}</a></li>
+      {% endfor %}
+    </ul>
+    <a class="permalink" href="{{ root_url }}{{ post.url }}">Permalink</a>
+  </div>
+</article>

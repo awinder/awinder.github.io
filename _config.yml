@@ -1,0 +1,13 @@
+# Tag plugin
+name: The Attic
+description: "Andrew Winder's take on node.js, AngularJS, and all other things technology."
+url: winder.ws
+
+tag_page_layout: tag
+tag_page_dir: tags
+
+gems:
+  - octopress-codefence
+
+assets:
+  js_compressor:  uglifier
