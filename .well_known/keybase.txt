@@ -1,0 +1,70 @@
+==================================================================
+https://keybase.io/awinder
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of http://winder.ws
+  * I am awinder (https://keybase.io/awinder) on keybase.
+  * I have a public key with fingerprint 463D D615 6AE2 CE34 5F17  7412 E660 4AA7 8618 1B77
+
+To claim this, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "fingerprint": "463dd6156ae2ce345f177412e6604aa786181b77",
+            "host": "keybase.io",
+            "key_id": "e6604aa786181b77",
+            "uid": "4c7575c29b425899d2013520def4d000",
+            "username": "awinder"
+        },
+        "service": {
+            "hostname": "winder.ws",
+            "protocol": "http:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1396399387,
+    "expire_in": 157680000,
+    "prev": "1c507983bc601652be6d07c583e4e0ca93f140d3d41cc4499371eb6547e49e04",
+    "seqno": 6,
+    "tag": "signature"
+}
+
+with the aforementioned key, yielding the PGP signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v0.1.1
+Comment: https://keybase.io/crypto
+
+yML9AnicbZF9TBN3HMZboSw04tCFQNYx8OY0IZ256731qguQJWwYBZwCGmH0evdr
+eyp33d0BllKZ+FKGxGnLlGkqL25rcHZZFNQNsvmywETDNqq4AQPnCLKpEHRMcMK8
+Mvff/rr8nu/neZ7v5fttTIRKqx41rwnsS9CVqa9euF+i2rCqUOeCLALrhEwuaBuY
+/1g53gZEh8jxMmSCMAJlWQLBCRoYGIBiuBUhSQwxAIKAMZomjQRiRCwkCekhuyCF
+HUqMhZbASk5QNOVRxLGK+j98yfwAY0icxBkDZcEMuJGiWAOMoLgBZoEVY2EYDoMS
+EHm6GCg0XcbxLBAhtx5SxFKOUUTXfPMz4N/5yjJJ8TlEQRYYYbsi22XZYQq7ZKdj
+HgOWomcBRRbFovyzYigFosQJPGRCFJKRuXAiglIESlGokdRDYIeDE0ERFyZwkjAq
+68HhGlCqRCIMDpOUEbUwBIwQuMECCBYmGdyIAgzADE2hVgSDWZTFEIbBMCWSRICF
+wDESYBSAMaVfAu/yAmQilDVpmxIpcTaelktEALkvXSyIVKm1qijNgvDVVNro2P9u
+aWyLVV3ZeP7EFl8Brv91CVfgqNH5X8/ZrcmdYTaePG4YTgldrUo7Wd/Uvvo65Mz4
+sOejLo8rviP3vu39iRdTmh41rDjV+rL9i4NQd+qTA/1jmtGfZkc042DkyYCwOZKO
+1nWrAklr4UHWvze781jluPtW7YbC+ucSFkVOb3qzorZylkn3vOIdnNk8vKxjpPFh
+4M6Z4PYSuTrqc2dP9+U/UqnD+qy6zgVT/ZXFTd6I7ou7+rdZP3vct/Cozzk3mTVV
+tdSMhvac65y4q0me5HdUnbddG828GefN/7i9JjFv8fGzQ/kD/UkeUb3n1k1Xw5nf
+MsfUDsEdMxPyDPUeLbziRpPSPGJKy2td+9/5c+u5zPRlP/ryow7/0jw514qU7258
+YZV+b0p5XLAGK4jqA3HD0y1r1ndMttm3NBDmsd8T3o5u0yUFGv/WTsmDyT/sKo7c
+lPzeobOXPc+7XcacNu3OB1huxc5Ls8HUhReyzVopJ1azKFRuuxaffbe2Ny9jn8/0
+qu+7TybGlixd11Gf3lMq3a7gTVkDMbNf3TgCZa5//NZqKPHn5t5T/G3tfvOhZp6M
+qD92L85fXZrR91JaTbBYWluRdXrdwdkPlmOJraGhByseLa+e9pNy9F/xb+SZvVuD
+qSfslRnfeLvGDlTNLb7u//TOl//U2Vsqv7fPjfchdfcCIzfaJ/P8D498/RQto5ak
+=d9wz
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/awinder
+
+==================================================================
