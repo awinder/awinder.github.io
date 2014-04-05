@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Structuring Library Functionality in Node.js Projects</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="http://awinder.github.io/feed.xml">
+
+<link rel="stylesheet" href="/assets/winderws-9c72d0378503d206970f77799aca59d5.css">
+
+  </head>
+  <body class="post">
+    <div class="jumbotron" id="header">
+      <div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      <h1><a href="/">The Attic</a></h1>
+      <div class="row">
+        <div class="col-xs-10 col-sm-5 col-md-5 col-lg-5">
+          <h3 id="sigline" class="hidden-xs">&nbsp;&nbsp;by <a href="/about.html">Andrew Winder</a></h3>
+          <h3 id="sigline" class="mini visible-xs">&nbsp;by <a href="/about.html">Andrew Winder</a></h3>
+        </div>
+        <div class="col-xs-2 col-sm-7 col-md-7 col-lg-7">
+          <ul id="toplinks" class="hidden-xs pull-right">
+            <li><a href="/about.html">About</a></li>
+            <li><a href="/links.html">Links</a></li>
+            <li><a href="/archives.html">Archives</a></li>
+            <li class="hidden-md hidden-sm"><a href="feed://awinder.github.io/feed.xml">RSS</a></li>
+          </ul>
+          <div class="visible-xs">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mobilelinks">
+              <span class="sr-only">Toggle navigation</span>
+              <i class="fa fa-chevron-down"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <ul id="mobilelinks" class="collapse navbar-collapse nav nav-pills nav-stacked">
+      <li><a href="/about">About</a></li>
+      <li><a href="/links.html">Links</a></li>
+      <li><a href="/archives.html">Archives</a></li>
+      <li><a href="feed://awinder.github.io/feed.xml">RSS</a></li>
+    </ul>
+  </div>
+</div>
+
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 col-md-9 col-lg-9 col-md-push-3 col-lg-push-3">
+          <article>
+  <h2>Structuring Library Functionality in Node.js Projects</h2>
+  <p>Recently I needed to start thinking about adding reusable “library” components to an <a href="http://www.expressjs.com">Express.js</a> node.js project, and I hit a bit of a brick wall. The library functionality was fairly specific to the application, and it just doesn’t make that much sense to break it out as seperately-packaged module right now. Seems like a fairly common use-case, right? Well, apparently not. You can load any filepath through the <code>require()</code> system, like so:</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>var module = require('./lib/myModule');
+...</code></pre>
+</div>
+<p>But where this can quickly become a nuisance is when you are nested down a deep folder hierarchy:</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>var module = require('../../../lib/myModule');
+...</code></pre>
+</div>
+<p>Having to track the folder hierarchy is a little bit of an inconvience, especially when compared to the convience of the <a href="https://npmjs.org">NPM</a> module system. Searching around for some solutions, I found issues with the approaches commonly suggested:</p>
+
+<ul>
+<li><strong>Modify the paths where require.js scans for modules</strong> - In <a href="http://nodejs.org/docs/v0.4.1/api/all.html#loading_from_the_require.paths_Folders">previous versions</a> of node, it looks like you could modify the paths require.js searched through, but this method has been deprecated and was not a “best practice” while available.</li>
+
+<li><strong>Load the path to your library directory into a global</strong> - I wanted to figure out a way around needing to declare some application-wide globals. doing something like this might also create some unit testing concerns.</li>
+
+<li><strong>Utilize <a href="https://npmjs.org/doc/link.html">npm-link</a></strong> - This seemed great at first blush, but the actual mechanics of how npm-link works are a little perculiar. Npm-link first symlinks a specified module in your project directory to the global npm module location. Then, it’s symlinks that global location to a module in your local project’s node_modules directory. This means naming collisions could occur if you tried to use this method with two projects on the same machine.</li>
+
+<li><strong>Just put your library modules in the node_modules directory!</strong> - Right now, this project’s node_modules directory only includes community packages, and they’re all installed through <code>package.json</code>. This provides nice separation in the code – <code>node_modules</code> is not our code, everything else is. The node_modules directory is actually ignored in source control to disuade developers from mucking around with our open-source libraries.</li>
+</ul>
+
+<p>Npm-link got me thinking though, and a <a href="http://mathematism.com">co-worker</a> clued in on that too. We could create a “library” module, which acted mostly as a namespace for our project’s unique library-type functionality. Each of those unique pieces would be submodules of the “library” module. Then, we can create a symlink from the node_modules directory to the library directory, and commit that symlink into our source control. Now our code can look like this:</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>var module = require('lib/myModule');
+...</code></pre>
+</div>
+<p><img src="http://awinder.github.io/img/posts/2013-10-15-structuring-local-node-modules/folder-structure.png" alt="Example folder structure" /></p>
+
+<p>We get the benefits of keeping our code outside of the node_modules directory, but with the benefits of it living within the <code>require()</code> lookup path. It’s working out great so far, and I’m happy we ended up finding a very straightforward solution to our problem.</p>
+</article>
+
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-3 col-md-pull-9 col-lg-pull-9">
+          <div id="biography">
+  <div id="me" class="center-block"></div>
+  <p>Hello, I'm Andrew Winder. I work at <a href="http://www.messagesystems.com">Message Systems</a> as a Senior Software Engineer, and I blog here about AngularJS, Node.js, and other technical topics.  All opinions are my own.</p>
+  <div class="row">
+    <div class="col-xs-4 col-sm-4 col-md-4 mol-lg-4">
+      <a href="https://twitter.com/awinder"><i class="fa fa-twitter"></i></a>
+    </div>
+    <div class="col-xs-4 col-sm-4 col-md-4 mol-lg-4">
+      <a href="https://www.github.com/awinder"><i class="fa fa-github"></i></a>
+    </div>
+    <div class="col-xs-4 col-sm-4 col-md-4 mol-lg-4">
+      <a href="https://www.linkedin.com/in/ajwinder"><i class="fa fa-linkedin"></i></a>
+    </div>
+  </div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    <div class="jumbotron footer">
+      <div class="container">
+        <div class="row">
+          <footer class="col-sm-12 col-md-12 col-lg-12">
+            <p>&copy; Andrew Winder, 2013-2014.  All rights reserved.</p>
+          </footer>
+        </div>
+      </div>
+    </div>
+    <script src="/assets/theattic-657bf60b2d30b7525fe605793bedb038.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>The Attic</title>
+		<description>Andrew Winder's take on node.js, AngularJS, and all other things technology.</description>
+		<link>awinder.github.io</link>
+		<atom:link href="awinder.github.io/feed.xml" rel="self" type="application/rss+xml" />
+		
+			<item>
+				<title>Octopress 3.0</title>
+				<description>&lt;p&gt;The next version of Octopress (3.0) is nearing release and is in beta now. I’ve switched this blog over to using the new version and it’s been great. It’s a pretty radical change from the previous version, but for me, this is exactly what I wanted Octopress to be originally. It’s highly modularized and lightweight, with a new &lt;a href=&quot;https://github.com/octopress/deploy&quot;&gt;deployment plugin&lt;/a&gt; that can natively push to S3 as well as github. Octopress at it’s core is now nicely separated from your Jekyll design. If you’re like me, you’ll appreciate that Octopress is now about extending Jekyll as opposed to being highly intertwined with it. I’ll write more about my experience in a future post, but I wanted to get a quick complement out to those working on Octopress 3.0. Love the new direction, keep up the great work!&lt;/p&gt;</description>
+				<pubDate>Fri, 04 Apr 2014 21:53:46 -0400</pubDate>
+        <link>http://github.com/octopress/octopress</link>
+				<guid isPermaLink="true">awinder.github.io/2014/04/04/octopress-3-0.html</guid>
+			</item>
+		
+			<item>
+				<title>Unit Testing Express.js Routes</title>
+				<description>&lt;p&gt;Unit testing of model-type functionality in Node has been really straightforward for me so far. By injecting mocks using wonderful libraries like &lt;a href=&quot;https://github.com/thlorenz/proxyquire&quot;&gt;Proxyquire&lt;/a&gt;, you can smoothly control flow and trigger conditional branches while testing to ensure that you’re fully covering a module. But what happens when you need to test out &lt;a href=&quot;http://expressjs.com&quot;&gt;Express.js&lt;/a&gt; route handlers? Imagine you have configured a route in an Express.js application like so:&lt;/p&gt;
+&lt;div&gt;
+  &lt;pre data-line=''&gt;&lt;code class='language-javascript'&gt;var express = require('express')
+  , app = exports = module.exports = express()
+  , ctrl = require('./controller');
+
+app.get('/', ctrl.test);&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;And imagine you have a controller that implements the callback you configured your application with for the “/” endpoint:&lt;/p&gt;
+&lt;div&gt;
+  &lt;pre data-line=''&gt;&lt;code class='language-javascript'&gt;module.exports = {
+  test : function(req, res) {
+    setTimeout(function() {
+      res.send({ testing : true }, 200);
+    }, 5000);
+  },
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;The timeout here isn’t exactly practical, but it is representative: Most non-trivial functionality in an Express.js project is going to need to communicate with some system, like a database or caching system, or read from the file system. In other words: Something asynchronous! Asynchronous code is much less straightforward to test because a unit test needs to have some kind of idea when the code you’re testing is done. Unlike testing a synchronous function, which returns to signify that it’s completed, you just can’t do that with asynchronous logic. Further complicating this situation is that Express route handlers signal that they are done by calling a method on the Response object, like res.send. This is a little different from situations where I’ve tested my own modules (usually in models) because the events that my models emit are easily subscribed to in the tests. I can wait for the events to fire in a unit test, inspect any data that is in the event, and then exit the unit test. What’s the right move here?&lt;/p&gt;
+
+&lt;p&gt;It’s actually relatively straightforward: I just need to inject a mock Response object into the route handler. By injecting a mock, I can have some control over what happens once the methods on the response are called. Because response methods are often called in asynchronous workflows, I’ll want a mock that emits an event itself. Lets see what that might look like:&lt;/p&gt;
+&lt;div&gt;
+  &lt;pre data-line=''&gt;&lt;code class='language-javascript'&gt;var util = require('util')
+  , events = require('events').EventEmitter;
+
+var res = function () {
+};
+
+util.inherits(res, events);
+
+res.prototype.send = function(payload, code) {
+  this.emit('response', {
+    code: code,
+    response: payload
+  });
+}
+
+module.exports = function() {
+  return new res();
+};&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Hopefully this looks as expected. I’m utilizing the EventEmitter prototype that Node.JS provides, and now when the response object’s &lt;em&gt;send&lt;/em&gt; method is invoked, I fire a &lt;em&gt;response&lt;/em&gt; event. That way, in the unit test, I can attach an event handler to the mock’s event, and then kick off the route handler method that I want to test. Whenever the response methods are actually invoked, the handler in the unit test will invoke, and there we can perform any assertions on the output of our controller’s action: the response code and response body.&lt;/p&gt;
+&lt;div&gt;
+  &lt;pre data-line=''&gt;&lt;code class='language-javascript'&gt;var expect = require('chai').expect
+  , res = require('./mocks/response')()
+  , testing = require('./controller');
+
+describe('Testing', function(){
+  it('Should send an object with a testing key', function(done){
+    res.on('response', function(resp) {
+      expect(resp.response).to.have.property('testing');
+      expect(resp.response.testing).to.equal(true);
+      done();
+    });
+
+    testing.test({}, res);
+  });
+});&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;And just like that, my route handler has unit test coverage. As the controller gets built out, we’ll want to use tools like &lt;a href=&quot;https://github.com/thlorenz/proxyquire&quot;&gt;Proxyquire&lt;/a&gt;, as mentioned before, to inject mocks for our external resources to keep our tests running smoothly and to not duplicate testing efforts. A unit test for a route handler should exist primarily to test any branching logic or business logic that exists inside the handler itself: Not the branching logic and business logic in the route handlers &lt;em&gt;dependencies&lt;/em&gt;. We try to keep our logic pretty light inside of route handler itself at work, but there are some situations, like in error reporting, where we do branch. These situations are definitely not trivial, and it’s important that we have appropriate testing coverage for it. And now, we have a straightforward and repeatable method for doing that testing.&lt;/p&gt;</description>
+				<pubDate>Mon, 20 Jan 2014 22:00:00 -0500</pubDate>
+        <link>http://awinder.github.io/2014/01/20/unit-testing-express-dot-js-routes.html</link>
+				<guid isPermaLink="true">awinder.github.io/2014/01/20/unit-testing-express-dot-js-routes.html</guid>
+			</item>
+		
+			<item>
+				<title>Structuring Library Functionality in Node.js Projects</title>
+				<description>&lt;p&gt;Recently I needed to start thinking about adding reusable “library” components to an &lt;a href=&quot;http://www.expressjs.com&quot;&gt;Express.js&lt;/a&gt; node.js project, and I hit a bit of a brick wall. The library functionality was fairly specific to the application, and it just doesn’t make that much sense to break it out as seperately-packaged module right now. Seems like a fairly common use-case, right? Well, apparently not. You can load any filepath through the &lt;code&gt;require()&lt;/code&gt; system, like so:&lt;/p&gt;
+&lt;div&gt;
+  &lt;pre data-line=''&gt;&lt;code class='language-javascript'&gt;var module = require('./lib/myModule');
+...&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;But where this can quickly become a nuisance is when you are nested down a deep folder hierarchy:&lt;/p&gt;
+&lt;div&gt;
+  &lt;pre data-line=''&gt;&lt;code class='language-javascript'&gt;var module = require('../../../lib/myModule');
+...&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Having to track the folder hierarchy is a little bit of an inconvience, especially when compared to the convience of the &lt;a href=&quot;https://npmjs.org&quot;&gt;NPM&lt;/a&gt; module system. Searching around for some solutions, I found issues with the approaches commonly suggested:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Modify the paths where require.js scans for modules&lt;/strong&gt; - In &lt;a href=&quot;http://nodejs.org/docs/v0.4.1/api/all.html#loading_from_the_require.paths_Folders&quot;&gt;previous versions&lt;/a&gt; of node, it looks like you could modify the paths require.js searched through, but this method has been deprecated and was not a “best practice” while available.&lt;/li&gt;
+
+&lt;li&gt;&lt;strong&gt;Load the path to your library directory into a global&lt;/strong&gt; - I wanted to figure out a way around needing to declare some application-wide globals. doing something like this might also create some unit testing concerns.&lt;/li&gt;
+
+&lt;li&gt;&lt;strong&gt;Utilize &lt;a href=&quot;https://npmjs.org/doc/link.html&quot;&gt;npm-link&lt;/a&gt;&lt;/strong&gt; - This seemed great at first blush, but the actual mechanics of how npm-link works are a little perculiar. Npm-link first symlinks a specified module in your project directory to the global npm module location. Then, it’s symlinks that global location to a module in your local project’s node_modules directory. This means naming collisions could occur if you tried to use this method with two projects on the same machine.&lt;/li&gt;
+
+&lt;li&gt;&lt;strong&gt;Just put your library modules in the node_modules directory!&lt;/strong&gt; - Right now, this project’s node_modules directory only includes community packages, and they’re all installed through &lt;code&gt;package.json&lt;/code&gt;. This provides nice separation in the code – &lt;code&gt;node_modules&lt;/code&gt; is not our code, everything else is. The node_modules directory is actually ignored in source control to disuade developers from mucking around with our open-source libraries.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Npm-link got me thinking though, and a &lt;a href=&quot;http://mathematism.com&quot;&gt;co-worker&lt;/a&gt; clued in on that too. We could create a “library” module, which acted mostly as a namespace for our project’s unique library-type functionality. Each of those unique pieces would be submodules of the “library” module. Then, we can create a symlink from the node_modules directory to the library directory, and commit that symlink into our source control. Now our code can look like this:&lt;/p&gt;
+&lt;div&gt;
+  &lt;pre data-line=''&gt;&lt;code class='language-javascript'&gt;var module = require('lib/myModule');
+...&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;http://awinder.github.io/img/posts/2013-10-15-structuring-local-node-modules/folder-structure.png&quot; alt=&quot;Example folder structure&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We get the benefits of keeping our code outside of the node_modules directory, but with the benefits of it living within the &lt;code&gt;require()&lt;/code&gt; lookup path. It’s working out great so far, and I’m happy we ended up finding a very straightforward solution to our problem.&lt;/p&gt;</description>
+				<pubDate>Tue, 15 Oct 2013 22:05:00 -0400</pubDate>
+        <link>http://awinder.github.io/2013/10/15/structuring-local-node-modules.html</link>
+				<guid isPermaLink="true">awinder.github.io/2013/10/15/structuring-local-node-modules.html</guid>
+			</item>
+		
+			<item>
+				<title>What's In the Attic</title>
+				<description>&lt;p&gt;Hello World! Welcome to the Attic, that musty place containing the out-of-season or otherwise discarded riff-raff of your life. Or in this case, the random musings and technical discussions of Andrew Winder, a web engineer at Message Systems in Columbia, MD. I’m primarily focused on the areas of PHP API development and well-structured &lt;a href=&quot;http://www.angularjs.org&quot;&gt;Javascript&lt;/a&gt; on the client-side right now, along with &lt;a href=&quot;https://en.wikipedia.org/wiki/NoSQL&quot;&gt;non-rdbms&lt;/a&gt; data storage design and &lt;a href=&quot;http://www.nodejs.org&quot;&gt;server-side javascript&lt;/a&gt; slowly commanding more and more of my attention. As I continue to explore these areas of technology, I’ve found myself wanting somewhere to collect and gather my thoughts, and record my experiences designing and building solutions using these tools. This blog will serve as that somewhere, that place to gather and store my thoughts, so that one day someone might find some use for them. My attic.&lt;/p&gt;
+
+&lt;p&gt;Along with acting as a place to purely write though, this blog will also act as an experimental playground for front-end development as well. I’m utilizing &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll&lt;/a&gt; as a static-site generator of these posts and listing pages, &lt;a href=&quot;http://twitter.github.io/bootstrap/&quot;&gt;Twitter Bootstrap&lt;/a&gt; as a CSS framework, and &lt;a href=&quot;http://fortawesome.github.io/Font-Awesome/&quot;&gt;FontAwesome&lt;/a&gt; to provide iconography across the site. I’ll be sure not to break things as I go along, but I’ve taken a first stab at a responsive design that seems to make sense to me across various device breakpoints. That may not be the last stab, though. This site will also evolve as I continue to actually write out posts. Right now, with one post, RSS feeds don’t make much sense, but if I can get into a good rhythm of posting updates, that’ll be next up. Figuring out better tag paging support might come after that.&lt;/p&gt;
+
+&lt;p&gt;That about wraps up my introduction to this site. Please feel free to ping me over the social media links on this site with any feedback, suggestions, or requests you might have!&lt;/p&gt;
+
+&lt;p&gt;-Andy, &lt;a href=&quot;http://www.twitter.com/awinder&quot;&gt;@awinder&lt;/a&gt;&lt;/p&gt;</description>
+				<pubDate>Sun, 13 Oct 2013 16:34:00 -0400</pubDate>
+        <link>http://awinder.github.io/2013/10/13/whats-in-the-attic.html</link>
+				<guid isPermaLink="true">awinder.github.io/2013/10/13/whats-in-the-attic.html</guid>
+			</item>
+		
+	</channel>
+</rss>

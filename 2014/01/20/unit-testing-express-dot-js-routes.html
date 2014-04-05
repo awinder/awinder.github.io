@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Unit Testing Express.js Routes</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="http://awinder.github.io/feed.xml">
+
+<link rel="stylesheet" href="/assets/winderws-9c72d0378503d206970f77799aca59d5.css">
+
+  </head>
+  <body class="post">
+    <div class="jumbotron" id="header">
+      <div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      <h1><a href="/">The Attic</a></h1>
+      <div class="row">
+        <div class="col-xs-10 col-sm-5 col-md-5 col-lg-5">
+          <h3 id="sigline" class="hidden-xs">&nbsp;&nbsp;by <a href="/about.html">Andrew Winder</a></h3>
+          <h3 id="sigline" class="mini visible-xs">&nbsp;by <a href="/about.html">Andrew Winder</a></h3>
+        </div>
+        <div class="col-xs-2 col-sm-7 col-md-7 col-lg-7">
+          <ul id="toplinks" class="hidden-xs pull-right">
+            <li><a href="/about.html">About</a></li>
+            <li><a href="/links.html">Links</a></li>
+            <li><a href="/archives.html">Archives</a></li>
+            <li class="hidden-md hidden-sm"><a href="feed://awinder.github.io/feed.xml">RSS</a></li>
+          </ul>
+          <div class="visible-xs">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mobilelinks">
+              <span class="sr-only">Toggle navigation</span>
+              <i class="fa fa-chevron-down"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <ul id="mobilelinks" class="collapse navbar-collapse nav nav-pills nav-stacked">
+      <li><a href="/about">About</a></li>
+      <li><a href="/links.html">Links</a></li>
+      <li><a href="/archives.html">Archives</a></li>
+      <li><a href="feed://awinder.github.io/feed.xml">RSS</a></li>
+    </ul>
+  </div>
+</div>
+
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 col-md-9 col-lg-9 col-md-push-3 col-lg-push-3">
+          <article>
+  <h2>Unit Testing Express.js Routes</h2>
+  <p>Unit testing of model-type functionality in Node has been really straightforward for me so far. By injecting mocks using wonderful libraries like <a href="https://github.com/thlorenz/proxyquire">Proxyquire</a>, you can smoothly control flow and trigger conditional branches while testing to ensure that you’re fully covering a module. But what happens when you need to test out <a href="http://expressjs.com">Express.js</a> route handlers? Imagine you have configured a route in an Express.js application like so:</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>var express = require('express')
+  , app = exports = module.exports = express()
+  , ctrl = require('./controller');
+
+app.get('/', ctrl.test);</code></pre>
+</div>
+<p>And imagine you have a controller that implements the callback you configured your application with for the “/” endpoint:</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>module.exports = {
+  test : function(req, res) {
+    setTimeout(function() {
+      res.send({ testing : true }, 200);
+    }, 5000);
+  },
+}</code></pre>
+</div>
+<p>The timeout here isn’t exactly practical, but it is representative: Most non-trivial functionality in an Express.js project is going to need to communicate with some system, like a database or caching system, or read from the file system. In other words: Something asynchronous! Asynchronous code is much less straightforward to test because a unit test needs to have some kind of idea when the code you’re testing is done. Unlike testing a synchronous function, which returns to signify that it’s completed, you just can’t do that with asynchronous logic. Further complicating this situation is that Express route handlers signal that they are done by calling a method on the Response object, like res.send. This is a little different from situations where I’ve tested my own modules (usually in models) because the events that my models emit are easily subscribed to in the tests. I can wait for the events to fire in a unit test, inspect any data that is in the event, and then exit the unit test. What’s the right move here?</p>
+
+<p>It’s actually relatively straightforward: I just need to inject a mock Response object into the route handler. By injecting a mock, I can have some control over what happens once the methods on the response are called. Because response methods are often called in asynchronous workflows, I’ll want a mock that emits an event itself. Lets see what that might look like:</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>var util = require('util')
+  , events = require('events').EventEmitter;
+
+var res = function () {
+};
+
+util.inherits(res, events);
+
+res.prototype.send = function(payload, code) {
+  this.emit('response', {
+    code: code,
+    response: payload
+  });
+}
+
+module.exports = function() {
+  return new res();
+};</code></pre>
+</div>
+<p>Hopefully this looks as expected. I’m utilizing the EventEmitter prototype that Node.JS provides, and now when the response object’s <em>send</em> method is invoked, I fire a <em>response</em> event. That way, in the unit test, I can attach an event handler to the mock’s event, and then kick off the route handler method that I want to test. Whenever the response methods are actually invoked, the handler in the unit test will invoke, and there we can perform any assertions on the output of our controller’s action: the response code and response body.</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>var expect = require('chai').expect
+  , res = require('./mocks/response')()
+  , testing = require('./controller');
+
+describe('Testing', function(){
+  it('Should send an object with a testing key', function(done){
+    res.on('response', function(resp) {
+      expect(resp.response).to.have.property('testing');
+      expect(resp.response.testing).to.equal(true);
+      done();
+    });
+
+    testing.test({}, res);
+  });
+});</code></pre>
+</div>
+<p>And just like that, my route handler has unit test coverage. As the controller gets built out, we’ll want to use tools like <a href="https://github.com/thlorenz/proxyquire">Proxyquire</a>, as mentioned before, to inject mocks for our external resources to keep our tests running smoothly and to not duplicate testing efforts. A unit test for a route handler should exist primarily to test any branching logic or business logic that exists inside the handler itself: Not the branching logic and business logic in the route handlers <em>dependencies</em>. We try to keep our logic pretty light inside of route handler itself at work, but there are some situations, like in error reporting, where we do branch. These situations are definitely not trivial, and it’s important that we have appropriate testing coverage for it. And now, we have a straightforward and repeatable method for doing that testing.</p>
+</article>
+
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-3 col-md-pull-9 col-lg-pull-9">
+          <div id="biography">
+  <div id="me" class="center-block"></div>
+  <p>Hello, I'm Andrew Winder. I work at <a href="http://www.messagesystems.com">Message Systems</a> as a Senior Software Engineer, and I blog here about AngularJS, Node.js, and other technical topics.  All opinions are my own.</p>
+  <div class="row">
+    <div class="col-xs-4 col-sm-4 col-md-4 mol-lg-4">
+      <a href="https://twitter.com/awinder"><i class="fa fa-twitter"></i></a>
+    </div>
+    <div class="col-xs-4 col-sm-4 col-md-4 mol-lg-4">
+      <a href="https://www.github.com/awinder"><i class="fa fa-github"></i></a>
+    </div>
+    <div class="col-xs-4 col-sm-4 col-md-4 mol-lg-4">
+      <a href="https://www.linkedin.com/in/ajwinder"><i class="fa fa-linkedin"></i></a>
+    </div>
+  </div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    <div class="jumbotron footer">
+      <div class="container">
+        <div class="row">
+          <footer class="col-sm-12 col-md-12 col-lg-12">
+            <p>&copy; Andrew Winder, 2013-2014.  All rights reserved.</p>
+          </footer>
+        </div>
+      </div>
+    </div>
+    <script src="/assets/theattic-657bf60b2d30b7525fe605793bedb038.js"></script>
+
+  </body>
+</html>
