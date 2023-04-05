@@ -17,6 +17,13 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
+      - run:
+          name: "Maybe pass?"
+          command: |
+            echo "This step will pass/fail randomly
+            export TEST_FAIL=$(($RANDOM % 2))
+            [ "$TEST_FAIL" = "0" ] && echo "Step Passed" || echo "Step Failed"
+            [ "$TEST_FAIL" = "0" ] && exit 0 || exit 1
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
